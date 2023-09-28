@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Ramos Oliveira"
+  given-names: "Jorge Alberto"
+  orcid: "https://orcid.org/0000-0002-1810-6765"
+title: "neyuru/RayTracing: Initial Release"
+version: 0.1.0
+doi: 10.5281/zenodo.8387038
+date-released: 2023-09-28
+url: "https://doi.org/10.5281/zenodo.8387038"
