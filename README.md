@@ -53,12 +53,14 @@ jorge.ro at saltillo.tecnm.mx
 If you use this code in your research, please cite it as follows:
 
 ```bibtex
-@misc{Ramos2023raytracing,
-  author = {Jorge A. Ramos O.},
-  title = {Ray Propagation Simulator in Heterogeneous and Isotropic Media},
-  year = {2023},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{https://github.com/neyuru/RayTracing}}
+@software{jorge_alberto_ramos_oliveira_2023_8387038,
+  author       = {Jorge Alberto Ramos Oliveira},
+  title        = {neyuru/RayTracing: Initial Release},
+  month        = sep,
+  year         = 2023,
+  publisher    = {Zenodo},
+  version      = {v0.1.0},
+  doi          = {10.5281/zenodo.8387038},
+  url          = {https://doi.org/10.5281/zenodo.8387038}
 }
 ```
