@@ -55,11 +55,11 @@ If you use this code in your research, please cite it as follows:
 ```bibtex
 @software{jorge_alberto_ramos_oliveira_2023_8387038,
   author       = {Jorge Alberto Ramos Oliveira},
-  title        = {neyuru/RayTracing: Initial Release},
+  title        = {Ray Propagation Simulation in Heterogeneous and Isotropic Media},
   month        = sep,
   year         = 2023,
   publisher    = {Zenodo},
-  version      = {v0.1.0},
+  version      = {v0.1.1},
   doi          = {10.5281/zenodo.8387038},
   url          = {https://doi.org/10.5281/zenodo.8387038}
 }
