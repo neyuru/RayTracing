@@ -4,7 +4,7 @@ authors:
 - family-names: "Ramos Oliveira"
   given-names: "Jorge Alberto"
   orcid: "https://orcid.org/0000-0002-1810-6765"
-title: "neyuru/RayTracing: Initial Release"
+title: "Ray Propagation Simulation in Heterogeneous and Isotropic Media"
 version: 0.1.1
 doi: 10.5281/zenodo.8387038
 date-released: 2023-09-28
