@@ -1,7 +1,7 @@
 # RayTracing
 A Python script designed to simulate the propagation of rays through heterogeneous media. It models the interaction of rays with different media, allowing the analysis of various scenarios and phenomena according to the principle of least time.
 
-# Ray Tracing Simulation in Heterogeneous and Isotropic Media
+# Ray Tracing Simulation in Heterogeneous Media
 
 Early versions of this Python script simulates ray propagation in heterogeneous and isotropic media by solving the equations of motion, obtained by Fermat's principle, using a shooting method. Since version v0.3.0 a new method was introduced to enable Ray Tracing in anisotropic media. The simulations and results of this project have been used in several research articles, including "On ray tracing for sharp changing media" published by the Journal of the Acoustical Society of America.
 
