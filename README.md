@@ -60,7 +60,7 @@ If you use this code in your research, please cite it as follows:
   year         = 2023,
   publisher    = {Zenodo},
   version      = {v0.3.0},
-  doi          = {10.5281/zenodo.8387037},
-  url          = {https://doi.org/10.5281/zenodo.8387037}
+  doi          = {10.5281/zenodo.11433215},
+  url          = {https://doi.org/10.5281/zenodo.11433215}
 }
 ```
