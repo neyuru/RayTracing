@@ -53,13 +53,13 @@ jorge.ro at saltillo.tecnm.mx
 If you use this code in your research, please cite it as follows:
 
 ```bibtex
-@software{jorge_alberto_ramos_oliveira_2023_8387038,
+@software{jorge_alberto_ramos_oliveira_2024_8387037,
   author       = {Jorge Alberto Ramos Oliveira},
   title        = {Ray Propagation Simulation in Heterogeneous Media},
-  month        = sep,
-  year         = 2023,
+  month        = jun,
+  year         = 2024,
   publisher    = {Zenodo},
-  version      = {v0.3.0},
+  version      = {v0.3.1},
   doi          = {10.5281/zenodo.8387037},
   url          = {https://doi.org/10.5281/zenodo.8387037}
 }
