@@ -84,6 +84,8 @@ N = 10                                                      # For the Fish-Eye t
 DELTA_S_DIVISOR_FISHEYE = 90                                # For the Fish-Eye test, equals to the number of segments the perimeter of the unit circle is going to be divided.
 
 # DELTA_S search parameters
+# These values where carefully selected to lie within a close margin of the optimal value. Increasing the search interval would not affect the results but it will definitely
+# increase computational time. Decreasing the search interval would propbably leave out the optimal DELTA_S value.
 DELTA_STEP = 0.01                                           # Increment used by the algorithm to search for an optimal DELTA_S (Sharp interface).
 DELTA_S_DIVISOR_UPPER_LIMIT = 3                             # Upper bound for DELTA_S_DIVISOR during DELTA_S search.
 DELTA_S_DIVISOR_LOWER_LIMIT = 1 + DELTA_STEP                # Lower bound for DELTA_S_DIVISOR during DELTA_S search.
@@ -271,18 +273,24 @@ def constants(user_choice):
     elif user_choice == "3":
         gamma = 1                                                   # this means isotropy
         ray_count = 31                                              # number of rays to be simulated
-        theta_v = np.linspace(0, np.pi/2, ray_count)      # initial shooting angles of the simulated rays
+        theta_v = np.linspace(0, np.pi/2, ray_count)                # initial shooting angles of the simulated rays
         pos_x = np.ones((ray_count))*-2                             # initial x position for the rays
         s = 80                                                      # maximum allowed travelled distance (hopefully the rays abandon the boundaries first)
-        limx_i, limx_s, limy_i, limy_s = -2, 7, -3, 3               # boundaries of the simulation
+        limx_i, limx_s, limy_i, limy_s = -2, 5, -2.5, 1             # boundaries of the simulation. These were set so that the interpolation of the wavefront
+                                                                    # line could always have more than one point to work with the window set as
+                                                                    # limx_i, limx_s, limy_i, limy_s = -2, 4, -2, 0. Set these limits when displaying a movie
+                                                                    # is not important and the objective is to benchmark the scenario.
         op_interface, op_fish, op_vert_heterogeneous, op_anisotropy = 0, 0, 1, 0
     elif user_choice == "4":
         gamma = 3                                                   # this means anisotropy
         ray_count = 31                                              # number of rays to be simulated
-        theta_v = np.linspace(0, np.pi/2, ray_count)      # initial shooting angles of the simulated rays
+        theta_v = np.linspace(0, np.pi/2, ray_count)                # initial shooting angles of the simulated rays
         pos_x = np.ones((ray_count))*-2                             # initial x position for the rays
         s = 80                                                      # maximum allowed travelled distance (hopefully the rays abandon the boundaries first)
-        limx_i, limx_s, limy_i, limy_s = -2, 7, -3, 3               # boundaries of the simulation
+        limx_i, limx_s, limy_i, limy_s = -2, 5, -2.5, 1             # boundaries of the simulation. These were set so that the interpolation of the wavefront
+                                                                    # line could always have more than one point to work with the window set as
+                                                                    # limx_i, limx_s, limy_i, limy_s = -2, 4, -2, 0. Set these limits when displaying a movie
+                                                                    # is not important and the objective is to benchmark the scenario.
         op_interface, op_fish, op_vert_heterogeneous, op_anisotropy = 0, 0, 0, 1
     return gamma, ray_count, theta_v, pos_x, s, limx_i, limx_s, limy_i, limy_s, op_interface, op_fish, op_vert_heterogeneous, op_anisotropy
 
@@ -1071,7 +1079,6 @@ def main(user_choice, op_interface, op_fish, op_vert_heterogeneous, op_anisotrop
 
                                 x_interpolator = PchipInterpolator(t_ray, v_ray[0])
                                 y_interpolator = PchipInterpolator(t_ray, v_ray[1])
-                                angle_interpolator = PchipInterpolator(t_ray, v_ray[2])
                                 x = x_interpolator(travel_time)
                                 y = y_interpolator(travel_time)
 
@@ -1177,7 +1184,9 @@ def main(user_choice, op_interface, op_fish, op_vert_heterogeneous, op_anisotrop
                     ax.plot(x_values, v_ray[0], color='r', linewidth=1.5)
                     avg_param = np.mean(v_ray[0])
                     range_param = np.std(v_ray[0])
+                    # comment the following line for less verbosity
                     ax.annotate(f"Ray {int(i/2)}, $\Delta p_x$={100*np.abs(v_ray[0][0]-avg_param)/v_ray[0][0]:.2e}\%, $\overline p_x$={avg_param:.2e}, CV={100*range_param/avg_param:.4f}\%", xy=(x_values[-1], v_ray[0][-1]), textcoords="offset points", xytext=(-100,6), ha='center', fontsize=16, weight='bold')
+                    # uncomment the following line for less verbosity
                     # ax.annotate(f"Ray {int(i/2)}, {v_ray[0][0]:.2e}", xy=(x_values[-1], v_ray[0][-1]), textcoords="offset points", xytext=(-10,5), ha='center', fontsize=20, weight='bold')
 
             ax.set_xlabel('Ray length', fontsize=24)
@@ -1186,6 +1195,13 @@ def main(user_choice, op_interface, op_fish, op_vert_heterogeneous, op_anisotrop
             plt.show()
 
         return 0
+
+    scenarios = [
+        "the sharp interface scenario",
+        "the fish-eye scenario",
+        "the isotropic vertically heterogeneous scenario",
+        "the anisotropic vertically heterogeneous scenario"
+        ]
 
     if not(op_anisotropy):
         """
@@ -1202,11 +1218,6 @@ def main(user_choice, op_interface, op_fish, op_vert_heterogeneous, op_anisotrop
                 " 2nd order Taylor  + 4-point difference method (MxSA)",
                 " 2nd order Taylor  + analytical 2-point momentum-impulse",
                 " 2nd order Taylor  + optimized  2-point momentum-impulse"
-                ]
-            scenarios = [
-                "the sharp interface scenario",
-                "the fish-eye scenario",
-                "the isotropic vertically heterogeneous scenario"
                 ]
 
             print("\033[1m\nChoose an Algorithm Option. (Methods for ray advancement + angle determination)\033[0m")
@@ -1260,12 +1271,8 @@ def main(user_choice, op_interface, op_fish, op_vert_heterogeneous, op_anisotrop
         """
         while True:
             messages = [
-                " 2-point curvature + optimized  2-point momentum-impulse",
-                " 2nd order Taylor  + optimized  2-point momentum-impulse"
-                ]
-            scenarios = [
-                "the anisotropic vertically heterogeneous scenario",
-                "the anisotropic vertically heterogeneous scenario"
+                " 2-point curvature + optimized 2-point momentum-impulse",
+                " 2nd order Taylor  + optimized 2-point momentum-impulse"
                 ]
 
             print("\033[1m\nChoose an Algorithm Option. (Methods for ray advancement + angle determination)\033[0m")
@@ -1283,7 +1290,7 @@ def main(user_choice, op_interface, op_fish, op_vert_heterogeneous, op_anisotrop
                 option = op11
                 break
             else:
-                print("Invalid choice. Please choose 1, 2.")
+                print("Invalid choice. Please choose 1 or 2.")
                 continue
 
     while True:
@@ -1422,19 +1429,19 @@ def main(user_choice, op_interface, op_fish, op_vert_heterogeneous, op_anisotrop
                         elif user_choice_1 == "9":
                             DELTA_S = SIGMA / 2.74
                     elif op_fish:
-                        if user_choice_1 == "1":                # There are two sets of calibrated values in this section. Both of them determined using a grid size of SIGMA/3.
-                            DELTA_S_DIVISOR_FISHEYE = 4587      # The current values in the left correspond to the number of segments a unit circle must be partitioned so that
-                        elif user_choice_1 == "2":              # the resulting length (DELTA_S) is approximately the same as the interface scenario above. The other set shown
-                            DELTA_S_DIVISOR_FISHEYE = 4556      # below, was determined so that all methods resulted in a closure error of MAX_DEVIATION = 5 percent or less
-                        elif user_choice_1 == "3":              # when simulating N = 10 turns around the fisheye's unit circle. Time considerations from the interface scenario
-                            DELTA_S_DIVISOR_FISHEYE = 278       # remain valid for the first set of values, so it is recommended to define an adequate narrow search interval:
-                        elif user_choice_1 == "4":              # (DELTA_S_DIVISOR_FISHEYE_LOWER_LIMIT, DELTA_S_DIVISOR_FISHEYE_UPPER_LIMIT) around these if time is scarse.
-                            DELTA_S_DIVISOR_FISHEYE = 300
+                        if user_choice_1 == "1":                # There are two sets of calibrated values in this section. Manually edit and choose from one. Both of them
+                            DELTA_S_DIVISOR_FISHEYE = 4587      # determined using a grid size of SIGMA/3. The current values in the left correspond to the number of segments
+                        elif user_choice_1 == "2":              # a unit circle must be partitioned so that the resulting length (DELTA_S) is approximately the same as the
+                            DELTA_S_DIVISOR_FISHEYE = 4556      # interface scenario above. The other set shown below, was determined so that all methods resulted in a
+                        elif user_choice_1 == "3":              # closure error of MAX_DEVIATION = 5 percent or less when simulating N = 10 turns around the fisheye's unit
+                            DELTA_S_DIVISOR_FISHEYE = 278       # circle. Time considerations from the interface scenario remain valid for the first set of values, so it is
+                        elif user_choice_1 == "4":              # recommended to define an adequate narrow search interval:
+                            DELTA_S_DIVISOR_FISHEYE = 300       # (DELTA_S_DIVISOR_FISHEYE_LOWER_LIMIT, DELTA_S_DIVISOR_FISHEYE_UPPER_LIMIT) around these if time is scarse.
                         elif user_choice_1 == "5":
                             DELTA_S_DIVISOR_FISHEYE = 300
                         elif user_choice_1 == "6":
                             DELTA_S_DIVISOR_FISHEYE = 303
-                        elif user_choice_1 == "7":              # The second set is as follows: 176, 194, 208, 205, 205, 208, 217, 205, 205 respectively.
+                        elif user_choice_1 == "7":              # The second set is as follows: 149, 169, 182, 179, 179, 182, 191, 179, 179 respectively.
                             DELTA_S_DIVISOR_FISHEYE = 3567
                         elif user_choice_1 == "8":
                             DELTA_S_DIVISOR_FISHEYE = 325
@@ -1499,9 +1506,9 @@ def main(user_choice, op_interface, op_fish, op_vert_heterogeneous, op_anisotrop
         elif user_input == 'y':
 
             print("\nWarming up...", end='', flush=True)                                    # Warmup stage, trying to prime CPU cache
-            for j in range(0, warmup):
-                with ProcessPoolExecutor(max_workers=THREADS-2) as executor:                # Leave 2 cpu threads to maintain system responsiveness.
-                    _ = [executor.submit(trazar, option, z, grd, False, DELTA_S, DELTA_S_DIVISOR_FISHEYE+1, user_choice) for _ in range(THREADS-2)]
+            # for j in range(0, warmup):
+            #     with ProcessPoolExecutor(max_workers=THREADS-2) as executor:                # Leave 2 cpu threads to maintain system responsiveness.
+            #         _ = [executor.submit(trazar, option, z, grd, False, DELTA_S, DELTA_S_DIVISOR_FISHEYE+1, user_choice) for _ in range(THREADS-2)]
             print(" done")
 
             print(f"Benchmarking{messages[int(user_choice_1) - 1]} in {scenarios[int(user_choice) - 1]}...", end='', flush=True)        # Start the benchmark process.
@@ -1572,7 +1579,7 @@ if __name__ == "__main__":
             f = vert_heterogeneous                                          # assign scenario to f so it will be available to function genZ
             break
         else:
-            print("Invalid choice. Please choose 1, 2 or 3.")
+            print("Invalid choice. Please choose 1, 2, 3 or 4.")
             continue
     gamma, ray_count, theta_v, pos_x, s, limx_i, limx_s, limy_i, limy_s, op_interface, op_fish, op_vert_heterogeneous, op_anisotropy = constants(user_choice)
 
